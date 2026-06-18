@@ -7,7 +7,9 @@ Name:       harbour-rpncalc
 
 # >> macros
 %define __provides_exclude_from ^%{_datadir}/.*$
-%define __requires_exclude ^libc|libdl|libm|libpthread|libpython3.7m|libpython3.4m|python|env|libutil.*$
+%define __requires_exclude ^libc|libdl|libm|libpthread|libpython3.8m|libpython3.4m|python|env|libutil.*$
+%define _binary_payload w9.gzdio
+%define _source_payload w9.gzdio
 # << macros
 
 %{!?qtc_qmake:%define qtc_qmake %qmake}
@@ -16,7 +18,7 @@ Name:       harbour-rpncalc
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    A RPN Calculator for Sailfish
 Version:    2.5
-Release:    1
+Release:    3
 Group:      Qt/Qt
 License:    GPL
 URL:        https://github.com/lainwir3d/sailfish-rpn-calculator
@@ -51,7 +53,10 @@ Full symbolic RPN calculator. Read http://en.wikipedia.org/wiki/Reverse_Polish_n
 
 # >> build post
 echo %_builddir
-cp -r /home/mersdk/share/projects/Qt/sailfish-rpn-calculator/common/python_modules_src %_builddir/
+
+#%{__cp}
+#cp -r /home/mersdk/share/projects/Qt/sailfish-rpn-calculator/common/python_modules_src %_builddir/
+cp -r ./.sfdk/src/sailfish-rpn-calculator/common/python_modules_src %_builddir/
 cd python_modules_src/
 
 tar xvf fastcache-1.0.2.tar.gz
@@ -124,9 +129,18 @@ rm -rf %{buildroot}/%{_datadir}/%{name}/share
 rm -rf %{buildroot}/%{_datadir}/%{name}/bin
 
 cd ..
+echo $(pwd)
+echo $(ls)
 
-cp /usr/lib/libpython3.7m.so.1.0 %{buildroot}/%{_datadir}/%{name}/lib/
-cp /lib/libutil.so.1 %{buildroot}/%{_datadir}/%{name}/lib/libutil.so.1
+#cp /usr/lib/libpython3.8m.so.1.0 %{buildroot}/%{_datadir}/%{name}/lib/
+#cp %{_libdir}/libpython3.8m.so.1.0 %{buildroot}/%{_datadir}/%{name}/lib/
+#cp /lib/libutil.so.1 %{buildroot}/%{_datadir}/%{name}/lib/libutil.so.1
+#cp %{_lib}/libutil.so.1 %{buildroot}/%{_datadir}/%{name}/lib/libutil.so.1
+
+#install -D -m 755 --target-directory %{buildroot}%{_datadir}/%{name}/lib/ \
+#    /usr/lib/libFooBar.so.1.2.3
+#https://forum.sailfishos.org/t/sdk-multiple-build-steps-qmake-and-cmake/6927/2
+
 # << install post
 
 desktop-file-install --delete-original       \

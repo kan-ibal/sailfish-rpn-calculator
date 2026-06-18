@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import QtQuick.Controls 2.13
+import Sailfish.Silica 1.0
 import QtGraphicalEffects 1.0
 
 Item{
@@ -30,7 +30,7 @@ Item{
         id: kbdBtn
         width: height
         height: Theme.fontSizeExtraLarge + 10
-        icon.source: "image://Theme/icon-l-dialpad"
+        icon.source: "image://Theme/icon-m-dialpad"
         onClicked: {
             expressionInput.focus = expressionInput.focus ? false : true;
             //if(settings.vibration()){

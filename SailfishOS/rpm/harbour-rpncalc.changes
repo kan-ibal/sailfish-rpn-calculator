@@ -1,0 +1,11 @@
+* Thu Feb 26 2026 kan <mail> 2.5-3
+- minor fixes
+- build against 4.6.0.13 SFOS SDK
+
+* Sun Aug 07 2022 kan <mail> 2.5-2
+- fix Settings issue
+
+* Thu Jun 30 2022 kan <mail> 2.5-1
+- build with 4.4.0.58 SFOS SDK
+
+

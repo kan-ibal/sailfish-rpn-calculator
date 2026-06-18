@@ -34,7 +34,7 @@ Python {
             newStackHandler([]);
 
            // this was sailfish only
-           //stackObj.pushAttached(Qt.resolvedUrl("../pages/Settings.qml"));
+           stackObj.pushAttached(Qt.resolvedUrl("../pages/Settings.qml"));
         });
     }
 
