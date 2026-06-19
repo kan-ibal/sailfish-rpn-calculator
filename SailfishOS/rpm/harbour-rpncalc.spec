@@ -7,25 +7,26 @@ Name:       harbour-rpncalc
 
 # >> macros
 %define __provides_exclude_from ^%{_datadir}/.*$
-%define __requires_exclude ^libc|libdl|libm|libpthread|libpython3.8m|libpython3.4m|python|env|libutil.*$
-%define _binary_payload w9.gzdio
-%define _source_payload w9.gzdio
+%define __requires_exclude      ^libc|libdl|libm|libpthread|libpython3.8m|libpython3.4m|python|env|libutil.*$
+%define pythonver               python3.11
+%define rpncalcver              harbour-rpncalc
 # << macros
 
 %{!?qtc_qmake:%define qtc_qmake %qmake}
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
-Summary:    A RPN Calculator for Sailfish
-Version:    2.5
-Release:    3
-Group:      Qt/Qt
-License:    GPL
-URL:        https://github.com/lainwir3d/sailfish-rpn-calculator
-Source0:    %{name}-%{version}.tar.bz2
-Source100:  harbour-rpncalc.yaml
-Requires:   sailfishsilica-qt5 >= 0.10.9
-Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.3.0
+Summary:        A RPN Calculator for Sailfish
+Version:        2.5.1
+Release:        0
+Group:          Qt/Qt
+License:        GPL
+URL:            https://github.com/lainwir3d/sailfish-rpn-calculator
+Source0:        %{name}-%{version}.tar.bz2
+Source100:      harbour-rpncalc.yaml
+Requires:       sailfish-version >= 5.1
+Requires:       sailfishsilica-qt5 >= 0.10.9
+Requires:       pyotherside-qml-plugin-python3-qt5 >= 1.3.0
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
@@ -33,6 +34,8 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 BuildRequires:  python3-base
 BuildRequires:  python3-devel
+BuildRequires:  python3-wheel
+BuildRequires:  python3-wheel-tools
 
 %description
 Full symbolic RPN calculator. Read http://en.wikipedia.org/wiki/Reverse_Polish_notation if you want to know more about RPN calculators.
@@ -59,8 +62,8 @@ echo %_builddir
 cp -r ./.sfdk/src/sailfish-rpn-calculator/common/python_modules_src %_builddir/
 cd python_modules_src/
 
-tar xvf fastcache-1.0.2.tar.gz
-cd fastcache-1.0.2
+tar xvf fastcache-1.1.0.tar.gz
+cd fastcache-1.1.0
 python3 setup.py build
 cd ..
 
@@ -69,25 +72,28 @@ cd ..
 #python3 setup.py build
 #cd ..
 
-tar xvf sympy-0.7.6.1.tar.gz
-cd sympy-0.7.6.1
+tar xvf sympy-1.14.0.tar.gz
+cd sympy-1.14.0
 python3 setup.py build
 cd ..
 
-tar xvf mpmath-0.19.tar.gz
-cd mpmath-0.19
-python3 setup.py build
-cd ..
+#tar xvf mpmath-1.4.1.tar.gz
+wheel unpack mpmath-1.4.1-py3-none-any.whl
+#cd mpmath-1.4.1
+#python3 setup.py build
+#cd ..
 
-tar xvf pyparsing-2.0.3.tar.gz
-cd pyparsing-2.0.3
-python3 setup.py build
-cd ..
+#tar xvf pyparsing-3.3.2.tar.gz
+wheel unpack pyparsing-3.3.2-py3-none-any.whl
+#cd pyparsing-3.3.2
+#python3 setup.py build
+#cd ..
 
-tar xvf dice-1.0.2.tar.gz
-cd dice-1.0.2
-python3 setup.py build
-cd ..
+#tar xvf dice-4.0.0.tar.gz
+wheel unpack dice-4.0.0-py3-none-any.whl
+#cd dice-4.0.0
+#python3 setup.py build
+#cd ..
 
 cd ..
 # << build post
@@ -101,7 +107,7 @@ rm -rf %{buildroot}
 # >> install post
 cd python_modules_src/
 
-cd fastcache-1.0.2
+cd fastcache-1.1.0
 python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
 cd ..
 
@@ -109,20 +115,33 @@ cd ..
 #python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
 #cd ..
 
-cd sympy-0.7.6.1
+cd sympy-1.14.0
 python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
 cd ..
 
-cd pyparsing-2.0.3
-python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+cd mpmath-1.4.1
+#python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+mkdir -p %{buildroot}/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/mpmath
+ls
+cp -r ./mpmath %buildroot/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/
+mkdir -p %{buildroot}/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/mpmath-1.4.1.dist-info
+cp -r ./mpmath-1.4.1.dist-info %buildroot/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/
 cd ..
 
-cd mpmath-0.19
-python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+cd pyparsing-3.3.2
+#python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+mkdir -p %{buildroot}/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/pyparsing
+cp -r ./pyparsing %buildroot/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/
+mkdir -p %{buildroot}/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/pyparsing-3.3.2.dist-info
+cp -r ./pyparsing-3.3.2.dist-info %buildroot/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/
 cd ..
 
-cd dice-1.0.2
-python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+cd dice-4.0.0
+#python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+mkdir -p %{buildroot}/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/dice
+cp -r ./dice %buildroot/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/
+mkdir -p %{buildroot}/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/dice-4.0.0.dist-info
+cp -r ./dice-4.0.0.dist-info %buildroot/%{_datadir}/%{name}/lib/%{pythonver}/site-packages/
 cd ..
 
 rm -rf %{buildroot}/%{_datadir}/%{name}/share

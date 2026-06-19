@@ -1,3 +1,7 @@
+* Fri Jun 19 2026 kan <mail> 2.5.1-0
+- fix for python 3.11
+- build for SFOS 5.1
+
 * Thu Feb 26 2026 kan <mail> 2.5-3
 - minor fixes
 - build against 4.6.0.13 SFOS SDK
